@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  TasksViewController.swift
 //  DoIt
 //
 //  Created by Irene Bajan on 2016-12-03.
@@ -8,11 +8,12 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class TasksViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var tasksTableView: UITableView!
     
     var tasks : [Task] = []
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,11 +32,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
         let task = tasks[indexPath.row]
-        cell.textLabel?.text = task.name
+        if task.important {
+            cell.textLabel?.text = "❗️\(task.name)"
+        }
+        else {
+            cell.textLabel?.text = task.name
+        }
+        
         return cell
     }
     
-    func makeTasks () -> [Task]{
+    func makeTasks() -> [Task]{
         let task1 = Task()
         task1.name = "walk the dog"
         task1.important = false
@@ -50,6 +57,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         return [task1, task2, task3]
     }
-
+    
+    @IBAction func plusTapped(_ sender: Any) {
+        performSegue(withIdentifier: "addSegue", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let nextVC = segue.destination as! CreateTaskViewController
+        nextVC.previousVC = self
+    }
+    
 }
 
